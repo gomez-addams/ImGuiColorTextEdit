@@ -618,12 +618,8 @@ void TextEditor::HandleMouseInputs()
 	}
 }
 
-void TextEditor::Render()
+void TextEditor::UpdatePalette()
 {
-	/* Compute mCharAdvance regarding to scaled font size (Ctrl + mouse wheel)*/
-	const float fontSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, "#", nullptr, nullptr).x;
-	mCharAdvance = ImVec2(fontSize, ImGui::GetTextLineHeightWithSpacing() * mLineSpacing);
-
 	/* Update palette with the current alpha from style */
 	for (int i = 0; i < (int)PaletteIndex::Max; ++i)
 	{
@@ -631,7 +627,16 @@ void TextEditor::Render()
 		color.w *= ImGui::GetStyle().Alpha;
 		mPalette[i] = ImGui::ColorConvertFloat4ToU32(color);
 	}
-	
+}
+
+void TextEditor::Render()
+{
+	/* Compute mCharAdvance regarding to scaled font size (Ctrl + mouse wheel)*/
+	const float fontSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, "#", nullptr, nullptr).x;
+	mCharAdvance = ImVec2(fontSize, ImGui::GetTextLineHeightWithSpacing() * mLineSpacing);
+
+	//UpdatePalette(); // too early?
+
 	static std::string buffer;
 	assert(buffer.empty());
 	
@@ -839,6 +844,8 @@ void TextEditor::Render(const char* aTitle, const ImVec2& aSize, bool aBorder, I
 	mWithinRender = true;
 	mTextChanged = false;
 	mCursorPositionChanged = false;
+
+	UpdatePalette(); // better?
 
 	ImGui::PushStyleColor(ImGuiCol_ChildWindowBg, ImGui::ColorConvertU32ToFloat4(mPalette[(int)PaletteIndex::Background]));
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.0f, 0.0f));
