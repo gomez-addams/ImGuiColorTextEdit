@@ -225,6 +225,10 @@ public:
 	void SelectAll();
 	bool HasSelection() const;
 
+	// Can't function without this access (useful along with GetCursorPosition) but a range construct would be helpful.
+	Coordinates GetSelectionStart() const;
+	Coordinates GetSelectionEnd() const;
+
 	void Copy();
 	void Cut();
 	void Paste();

@@ -1513,6 +1513,16 @@ bool TextEditor::HasSelection() const
 	return mState.mSelectionEnd > mState.mSelectionStart;
 }
 
+TextEditor::Coordinates TextEditor::GetSelectionStart() const
+{
+	return mState.mSelectionStart;
+}
+
+TextEditor::Coordinates TextEditor::GetSelectionEnd() const
+{
+	return mState.mSelectionEnd;
+}
+
 void TextEditor::Copy()
 {
 	if (HasSelection())
