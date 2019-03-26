@@ -187,7 +187,9 @@ public:
 	void SetErrorMarkers(const ErrorMarkers& aMarkers) { mErrorMarkers = aMarkers; }
 	void SetBreakpoints(const Breakpoints& aMarkers) { mBreakpoints = aMarkers; }
 
-	void Render(const char* aTitle, const ImVec2& aSize = ImVec2(), bool aBorder = false);
+	constexpr static ImGuiWindowFlags kDefaultChildFlags = (ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoMove);
+	void Render(const char* aTitle, const ImVec2& aSize = ImVec2(), bool aBorder = false, ImGuiWindowFlags childFlags = kDefaultChildFlags);
+
 	void SetText(const std::string& aText);
 	void SetTextLines(const std::vector<std::string>& aLines);
 	std::string GetText() const;
