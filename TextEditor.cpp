@@ -164,7 +164,9 @@ void TextEditor::DeleteRange(const Coordinates & aStart, const Coordinates & aEn
 	if (aStart.mLine == aEnd.mLine)
 	{
 		auto& line = mLines[aStart.mLine];
-		if (aEnd.mColumn >= (int)line.size())
+		if (aStart.mColumn >= (int)line.size())
+			; // avoid out-of-bounds access
+		else if (aEnd.mColumn >= (int)line.size())
 			line.erase(line.begin() + aStart.mColumn, line.end());
 		else
 			line.erase(line.begin() + aStart.mColumn, line.begin() + aEnd.mColumn);
@@ -174,8 +176,12 @@ void TextEditor::DeleteRange(const Coordinates & aStart, const Coordinates & aEn
 		auto& firstLine = mLines[aStart.mLine];
 		auto& lastLine = mLines[aEnd.mLine];
 
-		firstLine.erase(firstLine.begin() + aStart.mColumn, firstLine.end());
-		lastLine.erase(lastLine.begin(), lastLine.begin() + aEnd.mColumn);
+		if (aStart.mColumn < (int)firstLine.size())
+			firstLine.erase(firstLine.begin() + aStart.mColumn, firstLine.end());
+		if (aEnd.mColumn < (int)lastLine.size())
+			lastLine.erase(lastLine.begin(), lastLine.begin() + aEnd.mColumn);
+		else
+			lastLine.erase(lastLine.begin(), lastLine.end());
 
 		if (aStart.mLine < aEnd.mLine)
 			firstLine.insert(firstLine.end(), lastLine.begin(), lastLine.end());
